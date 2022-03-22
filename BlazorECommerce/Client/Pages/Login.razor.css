@@ -1,0 +1,25 @@
+﻿body {
+    margin: 40px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+input {
+    display: block;
+    width: 50%;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.type-1 {
+    border-radius: 10px;
+    border: 1px solid #822a89ff;
+    transition: .3s border-color;
+    background-color: #b555bda8
+}
+
+    .type-1:hover {
+        border: 1px solid #451849ff;
+    }
