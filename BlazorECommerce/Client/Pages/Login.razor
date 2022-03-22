@@ -1,0 +1,28 @@
+﻿@page "/login"
+@inject NavigationManager navigation
+@inject IAuthenticationServices authenticationservices
+
+<h3>Login</h3>
+<EditForm Model = "userViewModel" OnSubmit = "HandleLogin">
+    <div>
+        <label for="username">Name</label>
+        <InputText id = "username" @bind-Value="userViewModel.UserName"/>
+    </div>
+    <div>
+        <label for="password">Password</label>
+        <InputText id = "password" @bind-Value="userViewModel.Password" type = "password"/>
+    </div>
+    <button type="submit" class = "btn btn-primary"> Do it!!</button>
+</EditForm>
+
+
+@code {
+    private UserViewModel userViewModel = new UserViewModel();
+    private string message = string.Empty;
+
+    async Task HandleLogin()
+    {
+        await authenticationservices.Login(userViewModel);
+        navigation.NavigateTo("/");
+    }
+}

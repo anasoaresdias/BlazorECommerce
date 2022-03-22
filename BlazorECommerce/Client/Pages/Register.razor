@@ -1,0 +1,31 @@
+﻿@page "/register"
+@inject IAuthenticationServices authenticationservices
+
+<h3>Register</h3>
+<EditForm Model = "@usermodel" OnSubmit = "HandleRegister">
+    <div>
+        <label for="usermane">Name</label>
+        <InputText id = "username" @bind-Value="usermodel.UserName"/>
+    </div>
+    <div>
+        <label for="password">Password</label>
+        <InputText id = "password" @bind-Value="usermodel.Password" type = "password"/>
+    </div>
+    <div>
+        <label for = "role" >Role</label><br />
+        <InputSelect id = "role" @bind-Value="usermodel.Role" class="form-select">
+            <option value="admin">Administrador</option>
+            <option value="client">Client</option>
+        </InputSelect>
+    </div>
+    <button type="submit" class = "btn btn-primary"> Do it!!</button>
+</EditForm>
+
+
+@code {
+    private UserViewModel usermodel = new UserViewModel();
+    async Task HandleRegister()
+    {
+        await authenticationservices.Register(usermodel);
+    }
+}
