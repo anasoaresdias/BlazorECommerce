@@ -114,5 +114,25 @@
                             .Include(p => p.ProductVariants)
                             .ToListAsync();
         }
+
+        public async Task<ServiceResponse<List<ProductType>>> GetProductsTypeAsync()
+        {
+            var producttype = await _context.ProductType.ToListAsync();
+            return new ServiceResponse<List<ProductType>>
+            {
+                Data = producttype
+            };
+        }
+
+        public async Task<ServiceResponse<Product>> AddProduct(Product product)
+        {
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<Product>
+            {
+                Data = product,
+                Message = "Product added wth success!!"
+            };
+        }
     }
 }

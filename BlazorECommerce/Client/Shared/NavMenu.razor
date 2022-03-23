@@ -28,21 +28,44 @@
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+       @* <div class="nav-item px-3">
+            <NavLink class="nav-link" href="manager">
+                <span class="oi oi-plus" aria-hidden="true"></span> Manager
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="fetchdata">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
             </NavLink>
+        </div>*@
+        <AuthorizeView Roles = "manager">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="#" @onclick="()=>expandSub=!expandSub">
+                <span class="oi oi-monitor" aria-hidden="true"></span> Manager
+            </NavLink>
+            @if (expandSub)
+            {
+                <ul class = "nav flex-column">
+                    <li class = "nav-item px-3">
+                        <NavLink class="nav-link" href="manager/addproduct">
+                            <span class="oi oi-plus" aria-hidden="true"></span> Add Product
+                            </NavLink>
+                    </li>
+                    <li class = "nav-item px-3">
+                        <NavLink class="nav-link" href="manager/stock">
+                            <span class="oi oi-script" aria-hidden="true"></span> Stock
+                        </NavLink>
+                    </li>
+                </ul>
+            }
         </div>
+        </AuthorizeView>
     </nav>
 </div>
 
 @code {
     private bool collapseNavMenu = true;
+    private bool expandSub;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 

@@ -1,7 +1,7 @@
-﻿@page "/counter"
-@attribute [Authorize(Roles = "admin, client")]
+﻿@page "/manager"
+@attribute [Authorize(Roles = "manager")]
 
-<PageTitle>Counter</PageTitle>
+<PageTitle>Manager</PageTitle>
 
 <h1>Counter</h1>
 
@@ -14,6 +14,6 @@
 
     private void IncrementCount()
     {
-        currentCount+=2;
+        currentCount++;
     }
 }

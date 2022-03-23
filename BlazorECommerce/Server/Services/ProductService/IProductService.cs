@@ -7,5 +7,7 @@
         Task<ServiceResponse<List<Product>>> GetProductsByCategory(string categoryurl);
         Task<ServiceResponse<ProductsViewModel>> SearchProduct(string searchtext, int page);
         Task<ServiceResponse<List<string>>> GetProductsSearchSuggestions(string searchtext);
+        Task<ServiceResponse<List<ProductType>>> GetProductsTypeAsync();
+        Task<ServiceResponse<Product>> AddProduct(Product product);
     }
 }

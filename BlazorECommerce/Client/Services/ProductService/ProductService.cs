@@ -1,4 +1,6 @@
 ﻿
+using System.Net.Http.Json;
+
 namespace BlazorECommerce.Client.Services.ProductService
 {
     public class ProductService : IProductService
@@ -8,6 +10,7 @@ namespace BlazorECommerce.Client.Services.ProductService
         public event Action ProductsChanged;
 
         public List<Product> Products { get; set; } = new List<Product>();
+        public List<ProductType> ProductTypes { get; set; } = new List<ProductType>();
         public int CurrentPage { get; set; } = 1;
         public int PageCount { get; set; } = 0;
         public string LastSearchedText { get; set; } = string.Empty;
@@ -56,6 +59,11 @@ namespace BlazorECommerce.Client.Services.ProductService
         {
             var results = await http.GetFromJsonAsync<ServiceResponse<List<string>>>($"api/product/SearchSuggestions/{searchtext}");
             return results.Data;
+        }
+
+        public async Task AddProduct(Product product)
+        {
+            var result = await http.PostAsJsonAsync($"api/product", product);
         }
     }
 }

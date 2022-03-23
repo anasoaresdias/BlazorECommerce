@@ -14,6 +14,7 @@ namespace BlazorECommerce.Client.Services.ProductService
         Task<ServiceResponse<Product>> GetProduct(int Id);
         Task SearchProducts(string searchtext, int page);
         Task<List<string>> GetProductsBySearchSuggestions(string searchtext);
+        Task AddProduct(Product product);
 
     }
 }
