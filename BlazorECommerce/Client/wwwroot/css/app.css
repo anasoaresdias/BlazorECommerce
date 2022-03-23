@@ -83,8 +83,42 @@ a, .button-link {
 .buttonme {
     background-color: #b555bda8;
     border: 1px solid #822a89ff;
-    border-radius: 10px;
     color: white;
     padding: 10px;
-    margin: 10px;
+}
+/*<button class="button-24" role="button" > Button 24</button >*/
+.button-24 {
+    background: #8c2a92d2;
+    border: 1px solid #451849ff;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    margin-left: 5px;
+    margin-right: 5px; 
+}
+
+.button-24:hover,
+.button-24:active {
+    background-color: #e99dedc7;
+    background-position: 0 0;
+    color: #4d1b519a;
+}
+
+.button-24:active {
+    opacity: .5;
 }

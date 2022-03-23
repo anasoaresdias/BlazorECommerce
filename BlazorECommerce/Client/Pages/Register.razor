@@ -5,11 +5,11 @@
 <EditForm Model = "@usermodel" OnSubmit = "HandleRegister">
     <div>
         <label for="usermane">Name</label>
-        <InputText id = "username" @bind-Value="usermodel.UserName"/>
+        <input id = "username" @bind="usermodel.UserName" class="type-1"/>
     </div>
     <div>
         <label for="password">Password</label>
-        <InputText id = "password" @bind-Value="usermodel.Password" type = "password"/>
+        <input id = "password" @bind="usermodel.Password" type = "password" class = "type-1"/>
     </div>
     <div>
         <label for = "role" >Role</label><br />
@@ -18,7 +18,8 @@
             <option value="client">Client</option>
         </InputSelect>
     </div>
-    <button type="submit" class = "btn btn-primary"> Do it!!</button>
+    <br />
+    <button type="submit" class = "button-24">Register</button>
 </EditForm>
 
 

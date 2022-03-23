@@ -15,6 +15,18 @@
     text-decoration: line-through;
 }
 
+.type-1 {
+    border-radius: 10px;
+    border: 1px solid #822a89ff;
+    transition: .3s border-color;
+    background-color: #b555bda8
+}
+
+    .type-1:hover {
+        border: 1px solid #451849ff;
+    }
+
+
 @media (max-width: 1023.98px) {
     .media {
         flex-direction: column;
