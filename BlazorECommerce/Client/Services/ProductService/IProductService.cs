@@ -6,6 +6,7 @@ namespace BlazorECommerce.Client.Services.ProductService
     {
         event Action ProductsChanged;
         List<Product> Products { get; set; }
+        List<ProductType> ProductTypes { get; set; }
         string Message { get;set; }
         int CurrentPage { get; set; }
         int PageCount { get; set; }
@@ -14,7 +15,8 @@ namespace BlazorECommerce.Client.Services.ProductService
         Task<ServiceResponse<Product>> GetProduct(int Id);
         Task SearchProducts(string searchtext, int page);
         Task<List<string>> GetProductsBySearchSuggestions(string searchtext);
-        Task AddProduct(Product product);
+        Task AddProduct(DTO_Product_ProductType dto);
+        Task<ServiceResponse<List<ProductType>>> GetProductType();
 
     }
 }

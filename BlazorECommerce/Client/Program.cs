@@ -1,5 +1,6 @@
 global using BlazorECommerce.Client.Services.ProductService;
 global using BlazorECommerce.Shared;
+global using BlazorECommerce.Shared.ViewModels_dto;
 global using System.Net.Http.Json;
 global using BlazorECommerce.Client;
 global using BlazorECommerce.Client.Services.CategoryService;

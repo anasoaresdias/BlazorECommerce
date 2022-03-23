@@ -2,17 +2,17 @@
 {
     public class ProductService : IProductService
     {
-        private readonly DataContext _context;
+        private readonly DataContext context;
 
         public ProductService(DataContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public async Task<ServiceResponse<Product>> GetProduct(int Id)
         {
             var response = new ServiceResponse<Product>();
-            var product = await _context.Products
+            var product = await context.Products
                 .Include(x=>x.ProductVariants)
                 .ThenInclude(x=>x.ProductType)
                 .FirstOrDefaultAsync(p => p.Id == Id);
@@ -33,7 +33,7 @@
         {
             var response = new ServiceResponse<List<Product>>
             {
-                Data = await _context.Products
+                Data = await context.Products
                 .Include(x => x.ProductVariants)
                 .ToListAsync()
             };
@@ -44,7 +44,7 @@
         {
             var response = new ServiceResponse<List<Product>>
             {
-                Data = await _context.Products
+                Data = await context.Products
                     .Where(p => p.Category.Url.ToLower()
                     .Equals(categoryurl.ToLower()))
                     .Include(x => x.ProductVariants)
@@ -84,7 +84,7 @@
             var pageresults = 3f;
             var pagecount = Math.Ceiling((await FindProductsBySearchText(searchtext)).Count / pageresults);
 
-            var products = await _context.Products
+            var products = await context.Products
                             .Where(
                                 p => p.Title.ToLower().Contains(searchtext.ToLower())
                                 || p.Description.ToLower().Contains(searchtext.ToLower()))
@@ -107,7 +107,7 @@
 
         private async Task<List<Product>> FindProductsBySearchText(string searchtext)
         {
-            return await _context.Products
+            return await context.Products
                             .Where(
                                 p => p.Title.ToLower().Contains(searchtext.ToLower())
                                 || p.Description.ToLower().Contains(searchtext.ToLower()))
@@ -117,22 +117,35 @@
 
         public async Task<ServiceResponse<List<ProductType>>> GetProductsTypeAsync()
         {
-            var producttype = await _context.ProductType.ToListAsync();
+            var producttype = await context.ProductType.ToListAsync();
             return new ServiceResponse<List<ProductType>>
             {
                 Data = producttype
             };
         }
 
-        public async Task<ServiceResponse<Product>> AddProduct(Product product)
+        public async Task<ServiceResponse<Product>> AddProduct(DTO_Product_ProductType dto)
         {
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            context.Products.Add(dto.Product);
+            await context.SaveChangesAsync();
+            await AddProductVariant(dto);
             return new ServiceResponse<Product>
             {
-                Data = product,
-                Message = "Product added wth success!!"
+                Data = dto.Product,
+                Message = "Product added with success!!"
             };
+        }
+
+        public async Task AddProductVariant(DTO_Product_ProductType dto)
+        {
+            foreach (var item in dto.ProductType)
+            {
+                ProductVariant productVariant = new ProductVariant();
+                productVariant.ProductId = dto.Product.Id;
+                productVariant.ProductTypeId = item.Id;
+                context.ProductVariant.Add(productVariant);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

@@ -57,9 +57,9 @@ namespace BlazorECommerce.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<Product>>> AddProduct(Product product)
+        public async Task<ActionResult<ServiceResponse<Product>>> AddProduct(DTO_Product_ProductType dto)
         {
-            var response = await productService.AddProduct(product);
+            var response = await productService.AddProduct(dto);
             return Ok(response);
         }
     }

@@ -80,13 +80,6 @@ a, .button-link {
     color: #451849ff;
 }
 
-.buttonme {
-    background-color: #b555bda8;
-    border: 1px solid #822a89ff;
-    color: white;
-    padding: 10px;
-}
-/*<button class="button-24" role="button" > Button 24</button >*/
 .button-24 {
     background: #8c2a92d2;
     border: 1px solid #451849ff;

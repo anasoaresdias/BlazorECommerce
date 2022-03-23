@@ -1,4 +1,5 @@
 ﻿
+using BlazorECommerce.Shared;
 using System.Net.Http.Json;
 
 namespace BlazorECommerce.Client.Services.ProductService
@@ -61,9 +62,16 @@ namespace BlazorECommerce.Client.Services.ProductService
             return results.Data;
         }
 
-        public async Task AddProduct(Product product)
+        public async Task AddProduct(DTO_Product_ProductType dto)
         {
-            var result = await http.PostAsJsonAsync($"api/product", product);
+            await http.PostAsJsonAsync("api/product", dto);
+        }
+
+        public async Task<ServiceResponse<List<ProductType>>> GetProductType()
+        {
+            var responde = await http.GetFromJsonAsync<ServiceResponse<List<ProductType>>>("api/product/ProductType");
+            ProductTypes = responde.Data;
+            return responde;
         }
     }
 }

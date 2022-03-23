@@ -26,19 +26,66 @@
            }
         </InputSelect>
     </div>
+
+    <div class ="form-control">
+    @foreach (var item in productservice.ProductTypes)
+    {
+        <input type="checkbox" name="checkbox" @onchange="eventArgs => { CheckboxClicked(item, eventArgs.Value);}"/>@item.Name
+        @if (help)
+        {
+            <label for="price">Price</label>
+            <input id="price" type="text" name="text" @bind="productVariant.Price"></input>
+            <label for="original-price">Original Price</label>
+            <input id="original-price" type="text" name="text" @bind="productVariant.OriginalPrice"></input>
+        }
+        
+    }
+    </div>
+
     <br />
     <button type="submit" class ="button-24">Add</button>
 </EditForm>
 
 @code {
+    private bool help = false;
     private Product product = new Product();
+    private ProductVariant productVariant = new ProductVariant();
+    private List<ProductVariant> ProductVariantList = new List<ProductVariant>();
+    private List<ProductType> ProductTypesList { get; set; } = new List<ProductType>();
+    private DTO_Product_ProductType dto { get; set; } = new DTO_Product_ProductType();
     protected override async Task OnInitializedAsync()
     {
         await categoryservice.GetCategories();
+        await productservice.GetProductType();
+    }
+
+
+
+    void CheckboxClicked(ProductType productType, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            help = true;
+            //ne nao contem, adiciona
+            if (!ProductTypesList.Contains(productType))
+            {
+                ProductTypesList.Add(productType);
+            }
+        }
+        else
+        {
+            //se contem, tira
+            if (ProductTypesList.Contains(productType))
+            {
+                ProductTypesList.Remove(productType);
+            }
+        }
     }
 
     async Task HandleSubmit()
     {
-        await productservice.AddProduct(product);
+        dto.Product = product;
+        dto.ProductType = ProductTypesList;
+        await productservice.AddProduct(dto);
     }
 }
