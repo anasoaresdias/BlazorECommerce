@@ -13,10 +13,11 @@
     </div>
     <div>
         <label for = "role" >Role</label><br />
-        <InputSelect id = "role" @bind-Value="usermodel.Role" class="form-select">
-            <option value="admin">Administrador</option>
-            <option value="client">Client</option>
-        </InputSelect>
+        <select id = "role" @bind="usermodel.RolesId" class="form-select">
+            <option value="1">Administrador</option>
+            <option value="2">Client</option>
+            <option value="3">Manager</option>
+        </select>
     </div>
     <br />
     <button type="submit" class = "button-24">Register</button>

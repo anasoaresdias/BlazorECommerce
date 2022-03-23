@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Linq;
 
 namespace BlazorECommerce.Server.Services.AuthenticationServices
 {
@@ -24,7 +25,8 @@ namespace BlazorECommerce.Server.Services.AuthenticationServices
                 user.Username = usermodel.UserName;
                 user.PasswordHash = passwordhash;
                 user.PasswordSalt = passwordsalt;
-                user.Role = usermodel.Role;
+                user.RolesId = usermodel.RolesId;
+                user.Roles = await context.Roles.FirstOrDefaultAsync(x=>x.Id == user.RolesId);
                 response.Message = "Regist successfull";
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
@@ -51,6 +53,7 @@ namespace BlazorECommerce.Server.Services.AuthenticationServices
             {
                 return null;
             }
+            user.Roles = await context.Roles.FirstOrDefaultAsync(x => x.Id == user.RolesId);
             string token = CreateToken(user);
             return token;
         }
@@ -60,7 +63,7 @@ namespace BlazorECommerce.Server.Services.AuthenticationServices
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Roles.Name)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(

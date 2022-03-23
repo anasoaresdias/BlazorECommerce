@@ -29,7 +29,7 @@
                 new Category
                 {
                     Id = 1,
-                    Name="Books",
+                    Name = "Books",
                     Url = "books"
                 },
                 new Category
@@ -250,10 +250,18 @@
                     OriginalPrice = 399m
                 }
             );
+
+            modelBuilder.Entity<Roles>()
+               .HasData(
+                   new Roles { Id = 1, Name = "admin" },
+                   new Roles { Id = 2, Name = "client" },
+                   new Roles { Id = 3, Name = "manager" }
+              );
         }
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Roles> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<ProductType> ProductType { get; set; }
         public DbSet<ProductVariant> ProductVariant { get; set; }
