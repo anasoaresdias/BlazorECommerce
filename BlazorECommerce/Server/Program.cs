@@ -6,6 +6,7 @@ global using Microsoft.EntityFrameworkCore;
 global using BlazorECommerce.Server.Services.ProductService;
 global using BlazorECommerce.Server.Services.CategoryService;
 global using BlazorECommerce.Server.Services.AuthenticationServices;
+global using BlazorECommerce.Server.Services.CartService;
 global using Microsoft.IdentityModel.Tokens;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
@@ -30,6 +31,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 var app = builder.Build();
 

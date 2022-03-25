@@ -25,14 +25,14 @@ else
             </div>
         </li>
     }
-</ul>
-for (var i = 1; i <= ProductService.PageCount; i++)
-{
-    <a class = "button-24
-    page-selection
-    @(i == ProductService.CurrentPage ? "btn-info" : "btn-outline-info")"
-    href="/search/@ProductService.LastSearchedText/@i">@i</a>
-}
+    </ul>
+    for (var i = 1; i <= ProductService.PageCount; i++)
+    {
+        <a class = "button-24
+        page-selection
+        @(i == ProductService.CurrentPage ? "btn-info" : "btn-outline-info")"
+        href="/search/@ProductService.LastSearchedText/@i">@i</a>
+    }
 }
 @code {
     protected override void OnInitialized()

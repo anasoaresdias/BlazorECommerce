@@ -4,12 +4,16 @@
 @inject IProductService productservice
 
 <PageTitle>My Shop</PageTitle>
+@if(searchtext == null && categoryurl == null){
+    <FeaturedProducts/>
+}
 
 <ProductList/>
 
+
 @code {
     [Parameter]
-    public string? CategoryUrl { get; set; }
+    public string? categoryurl { get; set; }
 
     [Parameter]
     public string? searchtext { get; set; }
@@ -24,6 +28,11 @@
             await productservice.SearchProducts(searchtext, page);
             return;
         }
-        await productservice.GetProducts(CategoryUrl);
+        await productservice.GetProducts(categoryurl);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await productservice.GetListProducts();
     }
 }

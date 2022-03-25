@@ -18,7 +18,7 @@
         <InputText id="image" @bind-Value="product.ImageUrl" class="form-control"></InputText>
     </div>
     <div>
-        <label>Comic</label><br />
+        <label>Category</label><br />
         <InputSelect @bind-Value="product.CategoryId" class="form-select">
             @foreach (var categories in categoryservice.Categories)
            {
@@ -26,47 +26,48 @@
            }
         </InputSelect>
     </div>
-
-    <div class ="form-control">
-    @foreach (var item in productservice.ProductTypes)
-    {
-        <input type="checkbox" name="checkbox" @onchange="eventArgs => { CheckboxClicked(item, eventArgs.Value);}"/>@item.Name
-        @if (help)
-        {
-            <label for="price">Price</label>
-            <input id="price" type="text" name="text" @bind="productVariant.Price"></input>
-            <label for="original-price">Original Price</label>
-            <input id="original-price" type="text" name="text" @bind="productVariant.OriginalPrice"></input>
-        }
-        
-    }
-    </div>
-
     <br />
-    <button type="submit" class ="button-24">Add</button>
+    <div >
+        @foreach (var item in productservice.ProductTypes)
+        {
+            <div style="display:flex">
+                <div style="width:15%">
+                    <label class="container">@item.Name
+                        <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(item, eventArgs.Value);}">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <div id="@item.Id" style="display:flex">
+                    <label>Original Price €</label>
+                    <input class="type-1" placeholder="0.00€"> 
+                    <label> Price €</label>
+                    <input class="type-1" placeholder="0.00€"> 
+                </div>
+            </div>
+        }
+    </div>
+    <br />
+    <button type="submit" class ="button-24" style = "width: 50px">Add</button>
 </EditForm>
 
 @code {
-    private bool help = false;
     private Product product = new Product();
     private ProductVariant productVariant = new ProductVariant();
     private List<ProductVariant> ProductVariantList = new List<ProductVariant>();
     private List<ProductType> ProductTypesList { get; set; } = new List<ProductType>();
     private DTO_Product_ProductType dto { get; set; } = new DTO_Product_ProductType();
+
     protected override async Task OnInitializedAsync()
     {
         await categoryservice.GetCategories();
         await productservice.GetProductType();
     }
 
-
-
     void CheckboxClicked(ProductType productType, object checkedValue)
     {
         if ((bool)checkedValue)
         {
-            help = true;
-            //ne nao contem, adiciona
+            //se nao contem, adiciona
             if (!ProductTypesList.Contains(productType))
             {
                 ProductTypesList.Add(productType);
@@ -86,6 +87,7 @@
     {
         dto.Product = product;
         dto.ProductType = ProductTypesList;
+        dto.ProductVariant = ProductVariantList;
         await productservice.AddProduct(dto);
     }
 }

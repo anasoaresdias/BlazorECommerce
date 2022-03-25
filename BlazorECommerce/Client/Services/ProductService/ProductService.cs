@@ -36,6 +36,32 @@ namespace BlazorECommerce.Client.Services.ProductService
             ProductsChanged.Invoke();
         }
 
+        public async Task GetListProducts()
+        {
+
+            var result = await http.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/product");
+            if (result != null && result.Data != null)
+                Products = result.Data;
+            CurrentPage = 1;
+            PageCount = 0;
+            if (Products.Count == 0)
+                Message = "No products found.";
+            ProductsChanged.Invoke();
+        }
+
+        public async Task GetProductsPage(int page)
+        {
+            var result = await http.GetFromJsonAsync<ServiceResponse<ProductsViewModel>>($"api/product/page/{page}");
+            Products = result.Data.Products;
+            CurrentPage = result.Data.CurrentPage;
+            PageCount = result.Data.Pages;
+            if (Products.Count == 0)
+            {
+                Message = "No products found.";
+            }
+            ProductsChanged.Invoke();
+        }
+
         public async Task<ServiceResponse<Product>> GetProduct(int Id)
         {
             var responde = await http.GetFromJsonAsync<ServiceResponse<Product>>($"api/product/{Id}");

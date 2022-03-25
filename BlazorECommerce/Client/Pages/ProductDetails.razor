@@ -1,5 +1,6 @@
 ﻿@page "/product/{id:int}"
 @inject IProductService ProductService
+@inject ICartService cartservice
 
 @if(product == null)
 {
@@ -27,7 +28,7 @@ else
             @if(product.ProductVariants != null && product.ProductVariants.Count > 1)
             {
                 <div class = "form-group">
-                    <select class = "form-control" @bind="currenttypeid">
+                    <select class = "form-select" @bind="currenttypeid">
                         @foreach (var item in product.ProductVariants)
                        {
                            <option value = "@item.ProductTypeId">@item.ProductType.Name</option>
@@ -35,6 +36,10 @@ else
                     </select>
                 </div>
             }
+            <br/>
+            <button class="button-24" @onclick="AddToCart">
+                <i class="oi oi-cart"></i> Add to cart
+            </button>
         </div>
     </div>
 }
@@ -70,5 +75,16 @@ else
     {
         var variant = product.ProductVariants.FirstOrDefault(x=>x.ProductTypeId == currenttypeid);
         return variant;
+    }
+
+    private async Task AddToCart()
+    {
+        var productvariant = GetSelectedVariant();
+        var cartitem = new CartItem
+            {
+                ProductId = productvariant.ProductId,
+                ProductTypeId = productvariant.ProductTypeId
+            };
+            await cartservice.AddToCart(cartitem);
     }
 }

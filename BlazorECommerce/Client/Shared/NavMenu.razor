@@ -12,32 +12,23 @@
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                Home
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/featured" Match="NavLinkMatch.All">
+                <span class="oi oi-globe" aria-hidden="true"></span> Top Products
             </NavLink>
         </div>
         @foreach (var category in categoryservice.Categories)
         {
             <div class="nav-item px-3">
-            <NavLink class="nav-link" href="@category.Url">
+            <NavLink class="nav-link" href="@category.Url" >
+                <span class="oi oi-@category.Icon" aria-hidden="true"></span>
                 @category.Name
             </NavLink>
         </div>
         }
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-       @* <div class="nav-item px-3">
-            <NavLink class="nav-link" href="manager">
-                <span class="oi oi-plus" aria-hidden="true"></span> Manager
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </div>*@
         <AuthorizeView Roles = "manager">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="#" @onclick="()=>expandSub=!expandSub">
