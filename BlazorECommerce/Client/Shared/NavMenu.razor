@@ -20,18 +20,26 @@
                 <span class="oi oi-globe" aria-hidden="true"></span> Top Products
             </NavLink>
         </div>
-        @foreach (var category in categoryservice.Categories)
-        {
-            <div class="nav-item px-3">
-            <NavLink class="nav-link" href="@category.Url" >
-                <span class="oi oi-@category.Icon" aria-hidden="true"></span>
-                @category.Name
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="()=>expandSub1=!expandSub1">
+                <span class="oi oi-list" aria-hidden="true"></span> Categories
             </NavLink>
+            @if (expandSub1)
+            {
+                @foreach (var category in categoryservice.Categories)
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="@category.Url" >
+                            <span class="oi oi-@category.Icon" aria-hidden="true"></span> @category.Name
+                        </NavLink>
+                    </div>
+                }
+            }
         </div>
-        }
         <AuthorizeView Roles = "manager">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="#" @onclick="()=>expandSub=!expandSub">
+            <NavLink class="nav-link" @onclick="()=>expandSub=!expandSub">
                 <span class="oi oi-monitor" aria-hidden="true"></span> Manager
             </NavLink>
             @if (expandSub)
@@ -57,6 +65,7 @@
 @code {
     private bool collapseNavMenu = true;
     private bool expandSub;
+    private bool expandSub1;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 

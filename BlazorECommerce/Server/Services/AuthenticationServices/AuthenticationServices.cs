@@ -13,49 +13,60 @@ namespace BlazorECommerce.Server.Services.AuthenticationServices
             this.context = context;
             this.configuration = configuration;
         }
-        public async Task<ServiceResponse<User>> Register(UserViewModel usermodel)
+        public async Task<ServiceResponse<int>> Register(UserViewModel usermodel)
         {
-            var response = new ServiceResponse<User>();
-            var user = await context.Users.FirstOrDefaultAsync(p=>p.Username == usermodel.UserName);
-            if (user == null)
+            if (await UserExists(usermodel.Email, usermodel.UserName))
             {
-                user = new User();
-                response.Data = user;
-                CreatePasswordHash(usermodel.Password, out byte[] passwordhash, out byte[] passwordsalt);
-                user.Username = usermodel.UserName;
-                user.PasswordHash = passwordhash;
-                user.PasswordSalt = passwordsalt;
-                user.RolesId = usermodel.RolesId;
-                user.Roles = await context.Roles.FirstOrDefaultAsync(x=>x.Id == user.RolesId);
-                response.Message = "Regist successfull";
-                context.Users.Add(user);
-                await context.SaveChangesAsync();
-                
+                return new ServiceResponse<int> 
+                { 
+                    Success = false, 
+                    Message = "User already exists!" 
+                };
             }
-            else
-            {
-                response.Data = null;
-                response.Success = false;
-                response.Message = "Sorry, the user already exists.";
-            }
+            var user = new User();
+            CreatePasswordHash(usermodel.Password, out byte[] passwordhash, out byte[] passwordsalt);
+            user.PasswordHash = passwordhash;
+            user.PasswordSalt = passwordsalt;
+            user.Username = usermodel.UserName;
+            user.FirstName = usermodel.FirstName;
+            user.LastName = usermodel.LastName;
+            user.Email = usermodel.Email;
+            user.DateCreated = DateTime.Now;
+            user.RolesId = usermodel.RolesId;
+            user.Roles = await context.Roles.FirstOrDefaultAsync(x => x.Id == user.RolesId);
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
 
-            return response;
+            return new ServiceResponse<int> { 
+                Data = user.Id,
+                Message = "Registration Successful!"
+            };
         }
 
-        public async Task<string> Login(UserViewModel usermodel)
+        public async Task<bool> UserExists(string email, string username)
         {
-            var user = await context.Users.FirstOrDefaultAsync(p => p.Username == usermodel.UserName);
-            if (user.Username != usermodel.UserName)
+            if(await context.Users.AnyAsync( x => 
+                x.Username.ToLower().Equals(username.ToLower()) 
+                || x.Email.ToLower().Equals(email.ToLower())) )
             {
-                return null;
+                return true;
             }
-            if (!VerifyPasswordHash(usermodel.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                return null;
-            }
-            user.Roles = await context.Roles.FirstOrDefaultAsync(x => x.Id == user.RolesId);
-            string token = CreateToken(user);
-            return token;
+            return false;
+        }
+
+        public async Task<ServiceResponse<string>> Login(UserViewModel usermodel)
+        {
+            //if (user.Username != usermodel.UserName)
+            //{
+            //    return null;
+            //}
+            //if (!VerifyPasswordHash(usermodel.Password, user.PasswordHash, user.PasswordSalt))
+            //{
+            //    return null;
+            //}
+            //user.Roles = await context.Roles.FirstOrDefaultAsync(x => x.Id == user.RolesId);
+            //string token = CreateToken(user);
+            return null;
         }
 
         private string CreateToken(User user)

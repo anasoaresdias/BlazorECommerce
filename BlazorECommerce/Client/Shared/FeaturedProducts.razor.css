@@ -1,4 +1,30 @@
-﻿.container{
+﻿#containerid::-webkit-scrollbar {
+    width: 10px;
+    background-color: #e5e5e5;
+}
+
+#containerid::-webkit-scrollbar-thumb {
+    background-color: #8d6090d2;
+    border-radius: 9px;
+}
+
+    #containerid::-webkit-scrollbar-thumb:hover {
+        background-color: #765179d2;
+        border: 1px solid #8d6090d2;
+    }
+
+    #containerid::-webkit-scrollbar-thumb:active {
+        background-color: #5b2a5fd2;
+        border: 1px solid #333333;
+    }
+
+#containerid::-webkit-scrollbar-track {
+    border: 1px gray solid;
+    border-radius: 10px;
+    -webkit-box-shadow: 0 0 6px gray inset;
+} 
+
+.container{
     max-width: 1000px;
     display: flex;
     flex-direction: row;

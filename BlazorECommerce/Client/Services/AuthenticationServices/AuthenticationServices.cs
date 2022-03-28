@@ -20,14 +20,15 @@ namespace BlazorECommerce.Client.Services.AuthenticationServices
 
         public List<User> Users { get; set; } = new List<User>();
 
-        public async Task Register(UserViewModel usermodel)
+        public async Task<ServiceResponse<int>> Register(UserViewModel usermodel)
         {
-            await http.PostAsJsonAsync("api/Authentication/register", usermodel);
+            var result = await http.PostAsJsonAsync("api/Authentication/register", usermodel);
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<int>>();
         }
 
-        public async Task Login(UserViewModel usermodel)
+        public async Task Login(UserLoginDTO userLogin)
         {
-            var result = await http.PostAsJsonAsync("api/Authentication/login", usermodel);
+            var result = await http.PostAsJsonAsync("api/Authentication/login", userLogin);
             var token = await result.Content.ReadAsStringAsync();
             await localStorage.SetItemAsync("token", token);
             await authenticationState.GetAuthenticationStateAsync();

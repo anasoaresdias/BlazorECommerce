@@ -16,12 +16,12 @@ namespace BlazorECommerce.Server.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<ServiceResponse<User>>> Register(UserViewModel userRegister)
+        public async Task<ActionResult<ServiceResponse<int>>> Register(UserViewModel userRegister)
         {
             var response = await authenticationServices.Register(userRegister);
-            if(response.Data == null)
-                return BadRequest(response.Message);
-            return Ok(response.Message);
+            if(!response.Success)
+                return BadRequest(response);
+            return Ok(response);
         }
 
         [HttpPost("login")]

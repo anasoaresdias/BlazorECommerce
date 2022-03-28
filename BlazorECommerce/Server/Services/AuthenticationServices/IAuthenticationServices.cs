@@ -2,7 +2,9 @@
 {
     public interface IAuthenticationServices
     {
-        Task<ServiceResponse<User>> Register(UserViewModel usermodel);
-        Task<string> Login(UserViewModel usermodel);
+        Task<ServiceResponse<int>> Register(UserViewModel usermodel);
+        Task<ServiceResponse<string>> Login(UserViewModel usermodel);
+
+        Task<bool> UserExists(string email, string username);
     }
 }

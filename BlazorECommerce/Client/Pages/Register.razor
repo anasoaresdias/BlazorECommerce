@@ -3,31 +3,72 @@
 
 <h3>Register</h3>
 <EditForm Model = "@usermodel" OnSubmit = "HandleRegister">
+    <DataAnnotationsValidator/>
     <div>
-        <label for="usermane">Name</label>
-        <input id = "username" @bind="usermodel.UserName" class="type-1"/>
+        <label for="usermane">Userame</label>
+        <InputText id = "username" @bind-Value="usermodel.UserName" class="form-control"/>
+        <ValidationMessage For="@(()=>usermodel.UserName)"/>
+    </div>
+    <div>
+        <label for="firstname">First Name</label>
+        <InputText id = "firstname" @bind-Value="usermodel.FirstName" class="form-control"/>
+        <ValidationMessage For="@(()=>usermodel.FirstName)"/>
+    </div>
+    <div>
+        <label for="lastname">Last Name</label>
+        <InputText id = "lastname" @bind-Value="usermodel.LastName" class="form-control"/>
+        <ValidationMessage For="@(()=>usermodel.LastName)"/>
+    </div>
+    <div>
+        <label for="email">Email</label>
+        <InputText id = "email" @bind-Value="usermodel.Email" class="form-control"/>
+        <ValidationMessage For="@(()=>usermodel.Email)"/>
     </div>
     <div>
         <label for="password">Password</label>
-        <input id = "password" @bind="usermodel.Password" type = "password" class = "type-1"/>
+        <InputText id = "password" @bind-Value="usermodel.Password" type = "password" class="form-control"/>
+        <ValidationMessage For="@(()=>usermodel.Password)"/>
+    </div>
+    <div>
+        <label for="confirmpassword">Confirm Password</label>
+        <InputText id = "confirmpassword" @bind-Value="usermodel.ConfirmPassowrd" type = "password" class="form-control"/>
+        <ValidationMessage For="@(()=>usermodel.ConfirmPassowrd)"/>
     </div>
     <div>
         <label for = "role" >Role</label><br />
-        <select id = "role" @bind="usermodel.RolesId" class="form-select">
+        <InputSelect id = "role" @bind-Value="usermodel.RolesId" class="form-select">
             <option value="1">Administrador</option>
             <option value="2">Client</option>
             <option value="3">Manager</option>
-        </select>
+        </InputSelect>
+        <ValidationMessage For="@(()=>usermodel.RolesId)"/>
     </div>
     <br />
     <button type="submit" class = "button-24">Register</button>
+    <div class="MessageCssClass">
+        <span>@Message</span>
+    </div>
+    <ValidationSummary/>
 </EditForm>
 
 
 @code {
     private UserViewModel usermodel = new UserViewModel();
+
+    string Message = string.Empty;
+    string MessageCssClass = string.Empty;
+
     async Task HandleRegister()
     {
-        await authenticationservices.Register(usermodel);
+        var result = await authenticationservices.Register(usermodel);
+        Message = result.Message;
+        if (result.Success)
+        {
+            MessageCssClass = "text-success";
+        }
+        else
+        {
+            MessageCssClass = "text-danger";
+        }
     }
 }

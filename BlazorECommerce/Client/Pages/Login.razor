@@ -3,27 +3,31 @@
 @inject IAuthenticationServices authenticationservices
 
 <h3>Login</h3>
-<EditForm Model = "userViewModel" OnSubmit = "HandleLogin">
+<EditForm Model = "userLogin" OnValidSubmit = "HandleLogin">
+    <DataAnnotationsValidator/>
     <div>
-        <label for="username">Name</label>
-        <input id = "username" @bind="userViewModel.UserName" class="type-1"/>
+        <label for="usermane">Userame</label>
+        <InputText id = "username" @bind-Value="userLogin.UserName" class="form-control"/>
+        <ValidationMessage For="@(()=>userLogin.UserName)"/>
     </div>
     <div>
         <label for="password">Password</label>
-        <input id = "password" @bind="userViewModel.Password" type = "password" class="type-1"/>
+        <InputText id = "password" @bind-Value="userLogin.Password" type = "password" class="form-control"/>
+        <ValidationMessage For="@(()=>userLogin.Password)"/>
     </div>
+    <br />
     <button type="submit" class = "button-24" >Login</button>
     <button @onclick="Register" class = "button-24" >Register</button>
 </EditForm>
 
 
 @code {
-    private UserViewModel userViewModel = new UserViewModel();
+    private UserLoginDTO userLogin = new UserLoginDTO();
     private string message = string.Empty;
 
     async Task HandleLogin()
     {
-        await authenticationservices.Login(userViewModel);
+        //await authenticationservices.Login(userLogin);
         navigation.NavigateTo("/");
     }
 
