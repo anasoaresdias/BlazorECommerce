@@ -33,7 +33,6 @@ namespace BlazorECommerce.Server.Services.AuthenticationServices
             user.Email = usermodel.Email;
             user.DateCreated = DateTime.Now;
             user.RolesId = usermodel.RolesId;
-            user.Roles = await context.Roles.FirstOrDefaultAsync(x => x.Id == user.RolesId);
             context.Users.Add(user);
             await context.SaveChangesAsync();
 
@@ -54,31 +53,46 @@ namespace BlazorECommerce.Server.Services.AuthenticationServices
             return false;
         }
 
-        public async Task<ServiceResponse<string>> Login(UserViewModel usermodel)
+        public async Task<ServiceResponse<string>> Login(UserLoginDTO usermodel)
         {
-            //if (user.Username != usermodel.UserName)
-            //{
-            //    return null;
-            //}
-            //if (!VerifyPasswordHash(usermodel.Password, user.PasswordHash, user.PasswordSalt))
-            //{
-            //    return null;
-            //}
-            //user.Roles = await context.Roles.FirstOrDefaultAsync(x => x.Id == user.RolesId);
-            //string token = CreateToken(user);
-            return null;
+            var response = new ServiceResponse<string>();
+            var user = await context.Users
+                .FirstOrDefaultAsync(x => 
+                    x.Username
+                    .ToLower()
+                    .Equals(usermodel.UserName.ToLower())
+                    );
+            if(user == null)
+            {
+                response.Success = false;
+                response.Message = "User not found";
+            }
+            else if(!VerifyPasswordHash(usermodel.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                response.Success = false;
+                response.Message = "Wrong password";
+            }
+            else
+            {
+                user.Roles = user.Roles = await context.Roles.FirstOrDefaultAsync(x => x.Id == user.RolesId);
+                response.Data = CreateToken(user);
+                response.Success = true;
+            }
+            return response;
         }
 
         private string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.Roles.Name)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                configuration.GetSection("AppSettings:Token").Value));
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(
+                    configuration.GetSection("AppSettings:Token").Value));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
@@ -108,6 +122,32 @@ namespace BlazorECommerce.Server.Services.AuthenticationServices
                 var computedhash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
                 return computedhash.SequenceEqual(passowrhash);
             }
+        }
+
+        public async Task<ServiceResponse<bool>> ChangePassword(int userid, string newpassword)
+        {
+            var user = await context.Users.FindAsync(userid);
+            if (user == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "User Not found!"
+                };
+            }
+
+            CreatePasswordHash(newpassword, out byte[] passwordbash, out byte[] passwordsalt);
+            user.PasswordHash = passwordbash;
+            user.PasswordSalt = passwordsalt;
+
+            await context.SaveChangesAsync();
+
+            return new ServiceResponse<bool>
+            {
+                Data = true,
+                Success = true,
+                Message = "Password has been changed."
+            };
         }
     }
 }

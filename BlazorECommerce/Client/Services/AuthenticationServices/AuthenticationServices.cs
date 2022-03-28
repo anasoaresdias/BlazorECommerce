@@ -26,12 +26,19 @@ namespace BlazorECommerce.Client.Services.AuthenticationServices
             return await result.Content.ReadFromJsonAsync<ServiceResponse<int>>();
         }
 
-        public async Task Login(UserLoginDTO userLogin)
+        public async Task<ServiceResponse<string>> Login(UserLoginDTO userLoginDTO)
         {
-            var result = await http.PostAsJsonAsync("api/Authentication/login", userLogin);
-            var token = await result.Content.ReadAsStringAsync();
-            await localStorage.SetItemAsync("token", token);
+            var result = await http.PostAsJsonAsync("api/Authentication/login", userLoginDTO);
+            var token = await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+            await localStorage.SetItemAsync("token",token.Data);
             await authenticationState.GetAuthenticationStateAsync();
+            return new ServiceResponse<string>();
+        }
+
+        public async Task<ServiceResponse<bool>> ChangePassword(ChangePassword changePassword)
+        {
+            var result = await http.PostAsJsonAsync("api/Authentication/change-password", changePassword.Password);
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
         }
     }
 }

@@ -18,17 +18,32 @@
     <br />
     <button type="submit" class = "button-24" >Login</button>
     <button @onclick="Register" class = "button-24" >Register</button>
+    <div>
+        <span>@Message</span>
+    </div>
 </EditForm>
 
 
 @code {
     private UserLoginDTO userLogin = new UserLoginDTO();
-    private string message = string.Empty;
+    private string Message = string.Empty;
+    private string returnUrl = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        var uri = navigation.ToAbsoluteUri(navigation.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var url))
+        {
+            returnUrl = url;
+        }
+    }
 
     async Task HandleLogin()
     {
-        //await authenticationservices.Login(userLogin);
-        navigation.NavigateTo("/");
+        var result = await authenticationservices.Login(userLogin);
+        Message = result.Message;
+        navigation.NavigateTo(returnUrl);
+
     }
 
     void Register()

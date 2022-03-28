@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BlazorECommerce.Shared;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BlazorECommerce.Server.Controllers
 {
@@ -25,12 +26,22 @@ namespace BlazorECommerce.Server.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<string> Login(UserViewModel userlogin)
+        public async Task<ActionResult<ServiceResponse<string>>> Login(UserLoginDTO userlogin)
         {
-            var str = await authenticationServices.Login(userlogin);
-            if (str == null)
-                return str;
-            return str;
+            var response = await authenticationServices.Login(userlogin);
+            if (!response.Success)
+                return BadRequest(response);
+            return Ok(response);
+        }
+
+        [HttpPost("change-password"), Authorize]
+        public async Task<ActionResult<ServiceResponse<bool>>> ChangePassword([FromBody] string newpassword)
+        {
+            var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var response = await authenticationServices.ChangePassword(int.Parse(userid), newpassword);
+            if (!response.Success)
+                return BadRequest(response);
+            return Ok(response);
         }
     }
 }

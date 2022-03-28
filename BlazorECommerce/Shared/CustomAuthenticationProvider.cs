@@ -2,25 +2,42 @@
 using Blazored.LocalStorage;
 using System.Text.Json;
 using System.Security.Claims;
+using System.Net.Http.Headers;
 
 namespace BlazorECommerce.Shared
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         private readonly ILocalStorageService localStorage;
+        private readonly HttpClient http;
 
-        public CustomAuthStateProvider(ILocalStorageService localStorage)
+        public CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient http)
         {
             this.localStorage = localStorage;
+            this.http = http;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             string token = await localStorage.GetItemAsStringAsync("token");
 
             var identity = new ClaimsIdentity();
+            http.DefaultRequestHeaders.Authorization = null;
 
             if (!string.IsNullOrEmpty(token))
-                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+            {
+                try
+                {
+                    identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                    http.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", token.Replace("\"",""));
+                }
+                catch
+                {
+                    await localStorage.RemoveItemAsync("token");
+                    identity = new ClaimsIdentity();
+                }
+            }
+                
 
             var user = new ClaimsPrincipal(identity);
             var state = new AuthenticationState(user);
