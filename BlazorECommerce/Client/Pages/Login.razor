@@ -1,6 +1,7 @@
 ﻿@page "/login"
 @inject NavigationManager navigation
 @inject IAuthenticationServices authenticationservices
+@inject ICartService cartservice
 
 <h3>Login</h3>
 <EditForm Model = "userLogin" OnValidSubmit = "HandleLogin">
@@ -41,9 +42,9 @@
     async Task HandleLogin()
     {
         var result = await authenticationservices.Login(userLogin);
+        await cartservice.StoreCartItems(true);
         Message = result.Message;
         navigation.NavigateTo(returnUrl);
-
     }
 
     void Register()

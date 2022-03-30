@@ -6,10 +6,10 @@ global using BlazorECommerce.Client;
 global using BlazorECommerce.Client.Services.CategoryService;
 global using BlazorECommerce.Client.Services.AuthenticationServices;
 global using BlazorECommerce.Client.Services.CartService;
+global using Microsoft.AspNetCore.Components.Authorization;
 global using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
