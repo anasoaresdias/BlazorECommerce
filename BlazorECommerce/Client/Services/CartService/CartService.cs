@@ -19,10 +19,7 @@ namespace BlazorECommerce.Client.Services.CartService
             return await localStorage.GetItemAsync<List<CartItem>>("cart");
         }
 
-        private async Task<bool> IsUserAuthenticated()
-        {
-            return (await authentication.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
-        }
+        private async Task<bool> IsUserAuthenticated() => (await authentication.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
 
         public event Action OnChange;
 
